@@ -85,7 +85,7 @@ class RoverDetailViewController: UIViewController {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-        viewModel.
+       
     }
     
     private func formatTotalPhotos(totalPhotos: Int) -> NSAttributedString {
