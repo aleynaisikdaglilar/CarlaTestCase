@@ -9,6 +9,9 @@ import UIKit
 
 class RoverDetailViewController: UIViewController {
     
+    var cameraCount: Int = 0
+    var rover: Rovers?
+    
     private lazy var image: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -21,22 +24,18 @@ class RoverDetailViewController: UIViewController {
     private lazy var numberOfCamerasLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .gray
+        label.textColor = UIColor(red: 82/255, green: 82/255, blue: 100/255, alpha: 1.0)
         label.textAlignment = .left
-        label.font = .systemFont(ofSize: 15, weight: .medium)
         label.numberOfLines = 1
-        label.text = "Number Of Cameras: "
         return label
     }()
     
     private lazy var numberOfPhotosLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .gray
+        label.textColor = UIColor(red: 82/255, green: 82/255, blue: 100/255, alpha: 1.0)
         label.textAlignment = .left
-        label.font = .systemFont(ofSize: 15, weight: .medium)
         label.numberOfLines = 1
-        label.text = "Number Of Photos: "
         return label
     }()
     
@@ -83,17 +82,52 @@ class RoverDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareUI()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+        viewModel.
+    }
+    
+    private func formatTotalPhotos(totalPhotos: Int) -> NSAttributedString {
+        let mediumFont = UIFont.systemFont(ofSize: 15, weight: .medium)
+        let boldFont = UIFont.systemFont(ofSize: 15, weight: .bold)
+        
+        let attributedString = NSMutableAttributedString(string: "Number Of Photos: ", attributes: [.font: mediumFont])
+        attributedString.append(NSAttributedString(string: String(totalPhotos), attributes: [.font: boldFont]))
+        
+        return attributedString
+    }
+    
+    private func formatTotalCameras(totalCameras: Int) -> NSAttributedString {
+        let mediumFont = UIFont.systemFont(ofSize: 15, weight: .medium)
+        let boldFont = UIFont.systemFont(ofSize: 15, weight: .bold)
+        
+        let attributedString = NSMutableAttributedString(string: "Number Of Cameras: ", attributes: [.font: mediumFont])
+        attributedString.append(NSAttributedString(string: String(totalCameras), attributes: [.font: boldFont]))
+        
+        return attributedString
+    }
+    
+    public func configure(with rovers: Rovers) {
+        self.rover = rovers
+        cameraCount = rovers.cameras.count
+        numberOfPhotosLabel.attributedText = formatTotalPhotos(totalPhotos: rovers.total_photos)
+        numberOfCamerasLabel.attributedText = formatTotalCameras(totalCameras: rovers.cameras.count)
     }
 }
 
 extension RoverDetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        return cameraCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: RoverDetailTableViewCell.identifier, for: indexPath) as? RoverDetailTableViewCell else {
             return UITableViewCell()
+        }
+        if let rover = rover {
+            let camera = rover.cameras[indexPath.row]
+            cell.configure(with: camera)
         }
         return cell
     }

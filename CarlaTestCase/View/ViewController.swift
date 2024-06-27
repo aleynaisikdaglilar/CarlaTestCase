@@ -73,11 +73,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-////        let detailVC = RoverDetailViewController()
-//        let selectedItem = viewModel.rovers[indexPath.row]
-//        detailVC.selectedItem = selectedItem
-//        navigationController?.pushViewController(detailVC, animated: true)
-//        tableView.deselectRow(at: indexPath, animated: true)
+        let selectedItem = viewModel.rovers[indexPath.row]
+        let detailVC = RoverDetailViewController()
+        detailVC.configure(with: selectedItem)
+        navigationController?.pushViewController(detailVC, animated: true)
         
     }
 }

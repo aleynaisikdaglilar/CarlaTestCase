@@ -8,7 +8,6 @@
 import Foundation
 
 struct Rovers: Decodable {
-    
     let id: Int
     let name: String
     let landing_date: String

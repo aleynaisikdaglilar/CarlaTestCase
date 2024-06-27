@@ -8,7 +8,6 @@
 import Foundation
 
 struct ImageData: Decodable {
-    
     let id: Int
     let sol: Int
 //    let camera: [Camera]
